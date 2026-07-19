@@ -649,7 +649,11 @@ Hooks.once("init", () => {
 Hooks.once("ready", () => {
   game.socket.on(SOCKET, onSocket);
   const mod = game.modules.get(MODULE_ID);
-  mod.api = { createPassage, getConfig, isPassage, setState, resolveLink, RealPassageSheet };
+  mod.api = {
+    createPassage, getConfig, isPassage, setState, resolveLink, RealPassageSheet,
+    // Adjudication entry points (GM-authoritative); handy for macros/testing.
+    traverse: handleTraverseAsGM, approve: handleAttemptAsGM
+  };
   console.log(`${MODULE_ID} | ready. Create a passage with: game.modules.get('${MODULE_ID}').api.createPassage()`);
 });
 
