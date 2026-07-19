@@ -146,6 +146,14 @@ function passageEventCtx(passage, pc, extra = {}) {
   };
 }
 
+/** Close any open passage config/use sheet for this actor (both players & GM). */
+function closePassageSheet(passage) {
+  try {
+    passage?.sheet?.close();
+    for (const app of Object.values(passage?.apps ?? {})) app?.close?.();
+  } catch (e) { /* ignore */ }
+}
+
 async function onSocket(data) {
   switch (data?.type) {
     case "attempt": return handleAttemptAsGM(data);
@@ -302,6 +310,9 @@ async function handleDecisionAsPlayer(data) {
   const passage = game.actors.get(data.passageId);
   const pc = game.actors.get(data.actorId);
   if (!passage) return;
+
+  // The DM has responded, so the pending request sheet can close either way.
+  closePassageSheet(passage);
 
   if (!data.approved) {
     ui.notifications.warn(`The DM denied your attempt to use ${getConfig(passage).label || passage.name}.`);
@@ -513,6 +524,7 @@ class RealPassageSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         success: true, action: free ? "traversed freely" : "passed through"
       }));
       ui.notifications.info(`Traveling through ${name}...`);
+      closePassageSheet(passage);
       return;
     }
 
@@ -525,6 +537,7 @@ class RealPassageSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
     // Skill check, no approval needed -> roll right away.
     await attemptCheckAndTraverse(passage, pc, base, false);
+    closePassageSheet(passage);
   }
 
   static async #onDelete(event, target) {
