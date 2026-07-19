@@ -343,26 +343,32 @@ async function handleTraverseAsGM(data) {
   const destX = link.x;
   const destY = link.y;
 
-  if (!crossScene) {
-    // Same scene: just move the existing token.
-    const tok = (data.tokenId ? sourceScene?.tokens.get(data.tokenId) : null)
-      ?? findActorToken(sourceScene, pc.id);
-    if (tok) await tok.update({ x: destX, y: destY });
-    else ui.notifications.warn(`${pc.name} has no token on this scene to move.`);
-  } else {
-    // Cross scene: place/move the character's token on the target scene...
-    let destTok = findActorToken(link.scene, pc.id);
-    if (destTok) {
-      await destTok.update({ x: destX, y: destY });
-    } else {
-      const tdata = (await pc.getTokenDocument({ x: destX, y: destY })).toObject();
-      await link.scene.createEmbeddedDocuments("Token", [tdata]);
-    }
-    // ...remove the source token so the character truly leaves the origin...
-    const srcTok = (data.tokenId ? sourceScene?.tokens.get(data.tokenId) : null)
-      ?? findActorToken(sourceScene, pc.id);
-    if (srcTok) await srcTok.delete();
-    // ...and pull the owning player to the destination scene.
+  // A passage is a teleport. In Foundry v13+ a plain token position update is
+  // treated as *movement* and gets constrained by walls (the token stops at the
+  // first wall between origin and destination, even with the "displace"/teleport
+  // action). Token *creation* ignores walls, so we always place a fresh token on
+  // the destination square and remove any stale token(s) for the character. This
+  // works for same-scene and cross-scene passages alike, even through walls.
+  const srcTok = (data.tokenId ? sourceScene?.tokens.get(data.tokenId) : null)
+    ?? findActorToken(sourceScene, pc.id);
+
+  // Copy the source token so appearance/scale/vision carry over (fall back to the
+  // actor's prototype token if the character has no token on the origin scene).
+  const tdata = srcTok ? srcTok.toObject() : (await pc.getTokenDocument()).toObject();
+  delete tdata._id;
+  tdata.x = destX;
+  tdata.y = destY;
+
+  // Remove any existing token(s) for this character on the destination scene
+  // (for same-scene passages this is the source token itself).
+  const staleOnDest = link.scene.tokens.filter(t => t.actorId === pc.id).map(t => t.id);
+  await link.scene.createEmbeddedDocuments("Token", [tdata]);
+  if (staleOnDest.length) await link.scene.deleteEmbeddedDocuments("Token", staleOnDest);
+
+  if (crossScene) {
+    // Remove the source token on the origin scene so the character truly leaves,
+    // then pull the owning player across to the destination scene.
+    if (srcTok && sourceScene) await srcTok.delete().catch(() => {});
     if (user.active) link.scene.pullUsers([user.id]);
   }
 }
