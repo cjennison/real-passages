@@ -1,0 +1,120 @@
+<div class="rp-passage">
+
+  {{#if isGM}}
+  {{!-- GM view: configuration + state controls --}}
+  <form class="rp-config">
+    <div class="rp-row">
+      <label>Label</label>
+      <input type="text" name="label" value="{{cfg.label}}" placeholder="e.g. Stairs to the loft" />
+    </div>
+
+    <div class="rp-row">
+      <label>Links To</label>
+      <select name="linkUuid">
+        {{#each passages}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+      </select>
+    </div>
+    <div class="rp-row">
+      <label class="rp-check"><input type="checkbox" name="bidirectional" /> Also link the partner back to this passage (two-way)</label>
+    </div>
+
+    <hr />
+
+    <div class="rp-row">
+      <label class="rp-check"><input type="checkbox" name="requireApproval" {{#if cfg.requireApproval}}checked{{/if}} /> Requires DM approval before use</label>
+    </div>
+    <div class="rp-row">
+      <label>Skill Check</label>
+      <select name="skill">
+        {{#each skills}}<option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+    <div class="rp-row">
+      <label>DC</label>
+      <input type="number" name="dc" value="{{cfg.dc}}" min="1" max="40" />
+    </div>
+    <div class="rp-row">
+      <label class="rp-check"><input type="checkbox" name="passOnFail" {{#if cfg.passOnFail}}checked{{/if}} /> Failure still lets them through</label>
+    </div>
+    <div class="rp-row">
+      <label>Trap Damage (formula)</label>
+      <input type="text" name="trapFormula" value="{{cfg.trapFormula}}" placeholder="e.g. 2d6" />
+    </div>
+    <div class="rp-row">
+      <label>Trap Damage Type</label>
+      <select name="trapType">
+        {{#each damageTypes}}<option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+
+    <hr />
+
+    <div class="rp-row">
+      <label>State</label>
+      <select name="state">
+        <option value="open" {{#if stateOpen}}selected{{/if}}>Open</option>
+        <option value="locked" {{#if stateLocked}}selected{{/if}}>Locked (temporarily blocked)</option>
+        <option value="collapsed" {{#if stateCollapsed}}selected{{/if}}>Collapsed (permanently blocked)</option>
+      </select>
+    </div>
+
+    <div class="rp-row rp-free">
+      <label>Free Traversal <span class="rp-hint">(these players cross at will, no check)</span></label>
+      <div class="rp-players">
+        {{#each players}}
+        <label class="rp-check"><input type="checkbox" name="free-{{id}}" {{#if checked}}checked{{/if}} /> {{name}}</label>
+        {{else}}
+        <span class="rp-empty">No players connected.</span>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="rp-row">
+      <label>DM Note</label>
+      <textarea name="note" rows="2" placeholder="Private reminder shown only to you.">{{cfg.note}}</textarea>
+    </div>
+    <div class="rp-row">
+      <label>On event &rarr; Connection</label>
+      <select name="connectionId">
+        {{#each connections}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+      </select>
+    </div>
+
+    <button type="submit" class="rp-save"><i class="fas fa-save"></i> Save Configuration</button>
+  </form>
+
+  <div class="rp-row rp-status">
+    <span>Status:
+      {{#if stateOpen}}<strong class="rp-open">Open</strong>{{/if}}
+      {{#if stateLocked}}<strong class="rp-locked">Locked</strong>{{/if}}
+      {{#if stateCollapsed}}<strong class="rp-collapsed">Collapsed</strong>{{/if}}
+    </span>
+    <span class="rp-quick">
+      {{#unless stateOpen}}<button type="button" class="rp-mini" data-action="rpUnlock" title="Reopen"><i class="fas fa-door-open"></i> Reopen</button>{{/unless}}
+      {{#if stateOpen}}<button type="button" class="rp-mini" data-action="rpLock" title="Lock"><i class="fas fa-lock"></i> Lock</button>{{/if}}
+      {{#unless stateCollapsed}}<button type="button" class="rp-mini danger" data-action="rpCollapse" title="Collapse"><i class="fas fa-mountain"></i> Collapse</button>{{/unless}}
+      <button type="button" class="rp-mini danger" data-action="rpDelete" title="Delete this passage"><i class="fas fa-trash"></i> Delete</button>
+    </span>
+  </div>
+
+  {{else}}
+  {{!-- Player view --}}
+  <div class="rp-use">
+    <i class="fas fa-stairs rp-icon"></i>
+    <h3 class="rp-heading">{{cfg.label}}</h3>
+    {{#if stateCollapsed}}
+      <p class="rp-blocked"><i class="fas fa-mountain"></i> This passage has collapsed. It cannot be used.</p>
+    {{else if stateLocked}}
+      <p class="rp-blocked"><i class="fas fa-lock"></i> This passage is locked.</p>
+    {{else}}
+      <button type="button" class="rp-attempt" data-action="rpUse"><i class="fas fa-person-walking-arrow-right"></i> Use Passage</button>
+      {{#if free}}
+      <p class="rp-hint">You may travel this passage freely.</p>
+      {{else}}
+      <p class="rp-hint">Your request will be sent to the DM.</p>
+      {{/if}}
+    {{/if}}
+  </div>
+  {{/if}}
+
+</div>

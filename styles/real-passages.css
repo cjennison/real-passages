@@ -1,0 +1,129 @@
+.rp-sheet .window-content {
+  padding: 8px 10px;
+  overflow-y: auto;
+}
+
+.rp-passage .rp-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.rp-passage .rp-row > label:first-child {
+  flex: 0 0 130px;
+  font-weight: bold;
+}
+
+.rp-passage .rp-row input[type="text"],
+.rp-passage .rp-row input[type="number"],
+.rp-passage .rp-row select,
+.rp-passage .rp-row textarea {
+  flex: 1;
+}
+
+.rp-passage .rp-check {
+  font-weight: bold;
+}
+
+.rp-passage .rp-free {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.rp-passage .rp-players {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 4px;
+}
+
+.rp-passage .rp-players .rp-check {
+  font-weight: normal;
+}
+
+.rp-passage .rp-save {
+  margin-top: 6px;
+}
+
+.rp-passage hr {
+  margin: 8px 0;
+  border: none;
+  border-top: 1px solid var(--color-border-light-primary, #666);
+}
+
+.rp-passage .rp-heading {
+  margin: 6px 0 8px;
+}
+
+.rp-passage .rp-hint {
+  font-size: 0.8em;
+  font-weight: normal;
+  opacity: 0.7;
+}
+
+.rp-passage .rp-empty {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.rp-passage .rp-use {
+  text-align: center;
+  padding: 16px 8px;
+}
+
+.rp-passage .rp-icon {
+  font-size: 2.2em;
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+
+.rp-passage .rp-attempt {
+  width: auto;
+  padding: 4px 16px;
+  margin: 4px auto;
+}
+
+.rp-passage .rp-blocked {
+  padding: 10px 8px;
+  opacity: 0.85;
+}
+
+.rp-passage .rp-mini {
+  flex: 0 0 auto;
+  width: auto;
+  line-height: 1.4;
+  padding: 0 8px;
+}
+
+.rp-passage .rp-mini.danger {
+  color: #a01818;
+}
+
+.rp-approval fieldset {
+  margin: 6px 0;
+  border: 1px solid #999;
+  border-radius: 4px;
+}
+
+.rp-approval .rp-force {
+  display: block;
+  margin-top: 8px;
+}
+
+.rp-sheet .rp-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  gap: 8px;
+}
+
+.rp-sheet .rp-quick {
+  display: flex;
+  gap: 6px;
+}
+
+.rp-sheet .rp-open { color: #3fb950; }
+.rp-sheet .rp-locked { color: #d29922; }
+.rp-sheet .rp-collapsed { color: #a01818; }
