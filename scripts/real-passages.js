@@ -593,7 +593,9 @@ class RealPassageSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 /*  Passage creation                            */
 /* -------------------------------------------- */
 
-async function createPassage({ name = "Passage", img = "icons/svg/stairs.svg", drop = true } = {}) {
+const DEFAULT_ICON = `modules/${MODULE_ID}/icons/staircase.svg`;
+
+async function createPassage({ name = "Passage", img = DEFAULT_ICON, drop = true } = {}) {
   const LIMITED = CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED;
   const actor = await Actor.create({
     name,
