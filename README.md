@@ -4,6 +4,10 @@ Interactive, DM-authorized **passages** — stairs, elevators, chutes, ladders, 
 
 Managing movement between floors and locations is tedious: normally a player can't take the stairs themselves, so the DM has to drag every token around. **Real Passages** turns any spot on the map into a clickable marker that a player can use to move themselves to a linked destination — on the **same scene** or a **different scene** — with optional DM approval, skill checks, and traps.
 
+![Four linked rooms on a map — Library, Armory, Garden (lit) and a dark Crypt — each with passage markers](docs/images/overview.png)
+
+*A demo scene: four rooms joined by passage markers (the stair icons). Players click a marker to travel between rooms — even across the walls or into the dark Crypt.*
+
 ## How it works
 
 1. **Create a marker.** As GM, open the Token scene controls and click **Create Real Passage**. A marker (a small stairs token) drops on the map. Its configuration sheet opens.
@@ -14,6 +18,16 @@ Managing movement between floors and locations is tedious: normally a player can
    - **Trap Damage** — a formula + damage type applied on a failed check.
    - **Failure still lets them through** — for hazards you can push past (taking the damage but still crossing).
 4. **Use it.** A player double-clicks the marker and presses **Use Passage**. On success their token is moved to the linked marker; across scenes their token is created on the target scene and they are pulled there automatically.
+
+## Screenshots
+
+| The passage sheet (GM) | What the player sees |
+| --- | --- |
+| ![Passage configuration sheet showing Label, Links To, DM approval, skill check, DC, trap damage, state and free-traversal options](docs/images/config-sheet.png) | ![Player Use Passage dialog with a Use Passage button](docs/images/use-sheet.png) |
+
+When a gated passage requires approval, the active GM gets a request with the character, destination, any skill check / trap, and a **Force through** option:
+
+![DM approval dialog: Rowan wants to use Crumbling Climb to Garden, requires Athletics DC 10, trapped 1d6, with Approve and Deny buttons](docs/images/approval-dialog.png)
 
 ## DM controls
 
